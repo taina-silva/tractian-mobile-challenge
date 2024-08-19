@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "name": "dev",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "args": [
+        "--ENV=dev",
+      ]
+    },
+    {
+      "name": "prod",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "args": [
+        "--ENV=prod",
+      ]
+    }
+  ]
+}

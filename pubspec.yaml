@@ -33,6 +33,7 @@ dependencies:
   equatable: ^2.0.5
   fpdart: ^1.1.0
   mobx_codegen: ^2.6.1
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +48,7 @@ flutter:
   assets:
     - assets/
     - assets/logo/
+    - assets/app_icon/
 
   fonts:
     - family: K2D
@@ -65,3 +67,10 @@ flutter:
           weight: 700
         - asset: assets/fonts/K2D-ExtraBold.ttf
           weight: 800
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/app_icon/app_icon_square.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
