@@ -1,5 +1,5 @@
 import 'package:mobx/mobx.dart';
-import 'package:tractian_mobile_challenge/app/modules/splash/presentation/stores/states/splash_states.dart';
+import 'package:tractian_mobile_challenge/app/features/splash/presentation/stores/states/splash_states.dart';
 
 part 'splash_store.g.dart';
 

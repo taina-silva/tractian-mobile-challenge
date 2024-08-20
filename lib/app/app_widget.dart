@@ -1,16 +1,16 @@
 import 'dart:async';
-import 'dart:developer' as dev;
 
 import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tractian_mobile_challenge/app/core/utils/custom_colors.dart';
 import 'package:tractian_mobile_challenge/app/core/utils/status_bar_theme.dart';
+import 'package:tractian_mobile_challenge/app/features/home/presentation/pages/home_page.dart';
+import 'package:tractian_mobile_challenge/app/features/splash/presentation/pages/splash_page.dart';
 
 class AppWidget extends StatefulWidget {
-  const AppWidget({Key? key}) : super(key: key);
+  const AppWidget({super.key});
 
   @override
   State<AppWidget> createState() => _AppWidgetState();
@@ -23,23 +23,14 @@ class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
 
-    Modular.to.addListener(navigationListener);
+    changeStatusBarTheme(StatusBarTheme.light, CColors.primaryColor);
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   Future<void> dispose() async {
-    Modular.to.removeListener(navigationListener);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  void navigationListener() {
-    if (!kReleaseMode) {
-      dev.log('[NAV]: ${Modular.to.path}');
-    }
-
-    changeStatusBarTheme(StatusBarTheme.light, CColors.primaryBackground);
   }
 
   @override
@@ -48,12 +39,11 @@ class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
       excludeFromSemantics: true,
       onTap: () {
         final FocusScopeNode currentFocus = FocusScope.of(context);
-        if (!currentFocus.hasPrimaryFocus &&
-            currentFocus.focusedChild != null) {
+        if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
           FocusManager.instance.primaryFocus!.unfocus();
         }
       },
-      child: MaterialApp.router(
+      child: MaterialApp(
         title: 'Tractian Mobile Challenge',
         debugShowCheckedModeBanner: false,
         scrollBehavior: const CustomScrollBehavior(),
@@ -65,9 +55,16 @@ class _AppWidgetState extends State<AppWidget> with WidgetsBindingObserver {
         // ignore: deprecated_member_use
         useInheritedMediaQuery: true,
         supportedLocales: const [Locale('pt', 'BR')],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         builder: DevicePreview.appBuilder,
-        routeInformationParser: Modular.routeInformationParser,
-        routerDelegate: Modular.routerDelegate,
+        home: const SplashPage(),
+        routes: {
+          '/home': (_) => const HomePage(),
+        },
       ),
     );
   }

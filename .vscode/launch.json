@@ -5,18 +5,12 @@
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "args": [
-        "--ENV=dev",
+      "toolArgs": [
+        "--dart-define",
+        "ENV=dev",
+        "--dart-define",
+        "API_URL=https://fake-api.tractian.com",
       ]
     },
-    {
-      "name": "prod",
-      "type": "dart",
-      "request": "launch",
-      "program": "lib/main.dart",
-      "args": [
-        "--ENV=prod",
-      ]
-    }
   ]
 }

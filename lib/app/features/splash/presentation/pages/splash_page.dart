@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:tractian_mobile_challenge/app/core/components/structure/custom_scaffold.dart';
+import 'package:tractian_mobile_challenge/app/core/services/app_providers.dart';
 import 'package:tractian_mobile_challenge/app/core/utils/constants.dart';
-import 'package:tractian_mobile_challenge/app/modules/splash/presentation/stores/splash_store.dart';
-import 'package:tractian_mobile_challenge/app/modules/splash/presentation/stores/states/splash_states.dart';
+import 'package:tractian_mobile_challenge/app/core/utils/custom_colors.dart';
+import 'package:tractian_mobile_challenge/app/features/splash/presentation/stores/splash_store.dart';
+import 'package:tractian_mobile_challenge/app/features/splash/presentation/stores/states/splash_states.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -14,18 +15,21 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final store = Modular.get<SplashStore>();
+  final AppProviders providers = AppProviders();
+  late final SplashStore store;
   List<ReactionDisposer> reactions = [];
 
   @override
   void initState() {
     super.initState();
+
+    store = providers.getIt<SplashStore>();
     store.manageSplash();
 
     reactions = [
       reaction((_) => store.state, (SplashState state) async {
         if (state is ToEntryState) {
-          Modular.to.navigate('/home/');
+          Navigator.of(context).pushReplacementNamed('/home');
         }
       }),
     ];
@@ -34,17 +38,14 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      backgroundColor: CColors.primaryColor,
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              Assets.logo,
-              height: MediaQuery.of(context).size.width * 0.7,
-              width: MediaQuery.of(context).size.width * 0.7,
-            ),
+            Image.asset(Assets.logo),
           ],
         ),
       ),
