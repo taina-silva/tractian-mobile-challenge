@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tractian_mobile_challenge/app/core/utils/custom_colors.dart';
-import 'package:tractian_mobile_challenge/app/features/assets/presentation/stores/assets_store.dart';
+import 'package:tractian_mobile_challenge/app/features/assets/presentation/models/tree_item_model.dart';
 
 class TreeItemComponent extends StatefulWidget {
   final TreeItem item;

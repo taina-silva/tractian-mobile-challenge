@@ -25,12 +25,26 @@ class _AssetsPageState extends State<AssetsPage> {
   final AppProviders providers = AppProviders();
   late final AssetsStore store;
 
+  final TextEditingController _textController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
 
     store = providers.getIt<AssetsStore>();
     store.getCompanyAssets(widget.companyId);
+
+    _textController.addListener(() {
+      store.setTextFilter(_textController.text);
+    });
+  }
+
+  @override
+  void dispose() {
+    store.setSensorTypeFilter(null);
+    store.setTextFilter(null);
+
+    super.dispose();
   }
 
   @override
@@ -66,13 +80,16 @@ class _AssetsPageState extends State<AssetsPage> {
           }
 
           if (store.state is GetCompanyAssetsSuccessState) {
-            final tree = store.assetsTree;
-
             return Column(
               children: [
-                const CommonField(
+                CommonField(
                   placeholder: 'Buscar Ativo ou Local',
-                  prefixIcon: Icon(Icons.search),
+                  controller: _textController,
+                  prefixIcon: const Icon(Icons.search, color: CColors.primaryColor),
+                  suffixIcon: GestureDetector(
+                    onTap: () => _textController.clear(),
+                    child: const Icon(Icons.close, color: CColors.primaryColor),
+                  ),
                 ),
                 const SizedBox(height: DefaultSpace.normal),
                 const SensorTypeFilter(),
@@ -80,8 +97,9 @@ class _AssetsPageState extends State<AssetsPage> {
                   child: ListView.separated(
                     padding: const EdgeInsets.only(top: DefaultSpace.normal),
                     shrinkWrap: true,
-                    itemCount: tree.length,
-                    itemBuilder: (context, index) => TreeItemComponent(item: tree[index]),
+                    itemCount: store.currentTreeRootItems.length,
+                    itemBuilder: (context, index) =>
+                        TreeItemComponent(item: store.currentTreeRootItems[index]),
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: DefaultSpace.normal),
                   ),

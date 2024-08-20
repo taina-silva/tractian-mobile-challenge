@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 import 'package:tractian_mobile_challenge/app/core/components/buttons/custom_button.dart';
 import 'package:tractian_mobile_challenge/app/core/services/app_providers.dart';
+import 'package:tractian_mobile_challenge/app/features/assets/presentation/models/tree_item_model.dart';
 import 'package:tractian_mobile_challenge/app/features/assets/presentation/stores/assets_store.dart';
 
 class SensorTypeFilter extends StatefulWidget {
@@ -28,15 +29,13 @@ class _SensorTypeFilterState extends State<SensorTypeFilter> {
     ButtonParameters energyButtonParameters = ButtonParameters(
       text: 'Sensor de Energia',
       prefixIcon: Right(Image.asset(SensorType.energy.icon)),
-      onTap: () => store.sensorTypeFilter =
-          store.sensorTypeFilter != SensorType.energy ? SensorType.energy : null,
+      onTap: () => store.setSensorTypeFilter(SensorType.energy),
     );
 
     ButtonParameters vibrationButtonParameters = ButtonParameters(
       text: 'Crítico',
       prefixIcon: Right(Image.asset(SensorType.vibration.icon)),
-      onTap: () => store.sensorTypeFilter =
-          store.sensorTypeFilter != SensorType.vibration ? SensorType.vibration : null,
+      onTap: () => store.setSensorTypeFilter(SensorType.vibration),
     );
 
     return Observer(builder: (context) {

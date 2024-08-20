@@ -2,7 +2,7 @@ import 'package:mobx/mobx.dart';
 import 'package:tractian_mobile_challenge/app/core/infra/models/company_asset_model.dart';
 import 'package:tractian_mobile_challenge/app/core/infra/models/company_location_model.dart';
 import 'package:tractian_mobile_challenge/app/core/infra/repositories/companies_repository.dart';
-import 'package:tractian_mobile_challenge/app/core/utils/constants.dart';
+import 'package:tractian_mobile_challenge/app/features/assets/presentation/models/tree_item_model.dart';
 import 'package:tractian_mobile_challenge/app/features/assets/presentation/stores/states/assets_states.dart';
 
 part 'assets_store.g.dart';
@@ -17,8 +17,40 @@ abstract class AssetsStoreBase with Store {
   @readonly
   GetCompanyAssetsState _state = GetCompanyAssetsInitialState();
 
-  @observable
-  SensorType? sensorTypeFilter;
+  @readonly
+  Map<String, TreeItem> _originalTreeMap = {};
+
+  @readonly
+  List<TreeItem> _currentTreeRootItems = [];
+
+  @readonly
+  SensorType? _sensorTypeFilter;
+
+  @readonly
+  String? _textFilter;
+
+  @action
+  void setSensorTypeFilter(SensorType? sensorType) {
+    _sensorTypeFilter = (sensorType == _sensorTypeFilter) ? null : sensorType;
+    _applyFilters();
+  }
+
+  @action
+  void setTextFilter(String? text) {
+    _textFilter = (text == null || text.isEmpty) ? null : text;
+    _applyFilters();
+  }
+
+  void _applyFilters() {
+    final hasTextFilter = _textFilter != null && _textFilter!.isNotEmpty;
+    final hasSensorTypeFilter = _sensorTypeFilter != null;
+
+    if (!hasTextFilter && !hasSensorTypeFilter) {
+      _currentTreeRootItems = (_state as GetCompanyAssetsSuccessState).treeRootItems;
+    } else {
+      _buildAssetsTreeWithFilter();
+    }
+  }
 
   @action
   Future<void> getCompanyAssets(String companyId) async {
@@ -43,21 +75,15 @@ abstract class AssetsStoreBase with Store {
     );
 
     if (_state is! GetCompanyAssetsErrorState) {
-      _state = GetCompanyAssetsSuccessState(locations, assets);
+      _state = GetCompanyAssetsSuccessState(_buildOriginalAssetsTree(locations, assets));
     }
   }
 
-  @computed
-  List<TreeItem> get assetsTree {
-    if (_state is! GetCompanyAssetsSuccessState) return [];
-
-    final List<CompanyLocationModel> locations =
-        List.from((_state as GetCompanyAssetsSuccessState).locations);
-    final List<CompanyAssetModel> assets =
-        List.from((_state as GetCompanyAssetsSuccessState).assets);
-
-    final Map<String, TreeItem> treeMap = {};
+  @action
+  List<TreeItem> _buildOriginalAssetsTree(
+      List<CompanyLocationModel> locations, List<CompanyAssetModel> assets) {
     final List<TreeItem> rootItems = [];
+    final Map<String, TreeItem> treeMap = {};
 
     for (var location in locations) {
       final treeItem = TreeItem(
@@ -73,7 +99,10 @@ abstract class AssetsStoreBase with Store {
       if (location.parentId != null) {
         final treeItem = treeMap[location.id];
         final parent = treeMap[location.parentId];
-        if (parent != null) parent.children = List.from(parent.children)..add(treeItem!);
+        if (parent != null) {
+          treeItem!.parentId = parent.id;
+          parent.children = List.from(parent.children)..add(treeItem);
+        }
       }
     }
 
@@ -99,55 +128,46 @@ abstract class AssetsStoreBase with Store {
           : asset.parentId != null
               ? treeMap[asset.parentId]
               : null;
-      if (parent != null) parent.children = List.from(parent.children)..add(treeItem!);
+      if (parent != null) {
+        treeItem!.parentId = parent.id;
+        parent.children = List.from(parent.children)..add(treeItem);
+      }
     }
+
+    _currentTreeRootItems = rootItems;
+    _originalTreeMap = treeMap;
 
     return rootItems;
   }
-}
 
-enum TreeItemType { location, asset, component }
+  @action
+  void _buildAssetsTreeWithFilter() {
+    List<TreeItem> filteredItems = [];
+    List<TreeItem> rootItems = [];
 
-enum SensorType { energy, vibration }
+    for (var item in _originalTreeMap.values) {
+      final matchesSensorType = _sensorTypeFilter == null || item.sensorType == _sensorTypeFilter;
+      final matchesTextFilter = _textFilter == null ||
+          _textFilter!.isEmpty ||
+          item.name.toLowerCase().contains(_textFilter!.toLowerCase());
 
-extension TreeItemTypeExtension on TreeItemType {
-  String get icon {
-    switch (this) {
-      case TreeItemType.location:
-        return '${Assets.icons}/location.png';
-      case TreeItemType.asset:
-        return '${Assets.icons}/asset.png';
-      case TreeItemType.component:
-        return '${Assets.icons}/component.png';
+      if (matchesSensorType && matchesTextFilter) {
+        filteredItems.add(item);
+      }
     }
-  }
-}
 
-extension SensorTypeExtension on SensorType {
-  String get icon {
-    switch (this) {
-      case SensorType.energy:
-        return '${Assets.icons}/energy.png';
-      case SensorType.vibration:
-        return '${Assets.icons}/vibration.png';
+    TreeItem getRootItem(TreeItem filteredItem) {
+      if (filteredItem.parentId == null) return filteredItem;
+      final parent = _originalTreeMap[filteredItem.parentId];
+      if (parent != null) return getRootItem(parent);
+      return filteredItem;
     }
+
+    for (var item in filteredItems) {
+      TreeItem rootItem = getRootItem(item);
+      if (!rootItems.contains(rootItem)) rootItems.add(rootItem);
+    }
+
+    _currentTreeRootItems = rootItems;
   }
-}
-
-class TreeItem {
-  String id;
-  String name;
-  TreeItemType type;
-  SensorType? sensorType;
-  List<TreeItem> children;
-  bool isExpanded;
-
-  TreeItem({
-    required this.id,
-    required this.name,
-    required this.type,
-    this.sensorType,
-    this.children = const [],
-    this.isExpanded = false,
-  });
 }
