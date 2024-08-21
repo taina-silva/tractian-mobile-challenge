@@ -9,58 +9,40 @@ part of 'assets_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AssetsStore on AssetsStoreBase, Store {
-  late final _$_stateAtom =
-      Atom(name: 'AssetsStoreBase._state', context: context);
+  late final _$_getCompanyAssetsStateAtom =
+      Atom(name: 'AssetsStoreBase._getCompanyAssetsState', context: context);
 
-  GetCompanyAssetsState get state {
-    _$_stateAtom.reportRead();
-    return super._state;
+  GetCompanyAssetsState get getCompanyAssetsState {
+    _$_getCompanyAssetsStateAtom.reportRead();
+    return super._getCompanyAssetsState;
   }
 
   @override
-  GetCompanyAssetsState get _state => state;
+  GetCompanyAssetsState get _getCompanyAssetsState => getCompanyAssetsState;
 
   @override
-  set _state(GetCompanyAssetsState value) {
-    _$_stateAtom.reportWrite(value, super._state, () {
-      super._state = value;
+  set _getCompanyAssetsState(GetCompanyAssetsState value) {
+    _$_getCompanyAssetsStateAtom
+        .reportWrite(value, super._getCompanyAssetsState, () {
+      super._getCompanyAssetsState = value;
     });
   }
 
-  late final _$_originalTreeMapAtom =
-      Atom(name: 'AssetsStoreBase._originalTreeMap', context: context);
+  late final _$_buildTreeStateAtom =
+      Atom(name: 'AssetsStoreBase._buildTreeState', context: context);
 
-  Map<String, TreeItem> get originalTreeMap {
-    _$_originalTreeMapAtom.reportRead();
-    return super._originalTreeMap;
+  BuildTreeState get buildTreeState {
+    _$_buildTreeStateAtom.reportRead();
+    return super._buildTreeState;
   }
 
   @override
-  Map<String, TreeItem> get _originalTreeMap => originalTreeMap;
+  BuildTreeState get _buildTreeState => buildTreeState;
 
   @override
-  set _originalTreeMap(Map<String, TreeItem> value) {
-    _$_originalTreeMapAtom.reportWrite(value, super._originalTreeMap, () {
-      super._originalTreeMap = value;
-    });
-  }
-
-  late final _$_currentTreeRootItemsAtom =
-      Atom(name: 'AssetsStoreBase._currentTreeRootItems', context: context);
-
-  List<TreeItem> get currentTreeRootItems {
-    _$_currentTreeRootItemsAtom.reportRead();
-    return super._currentTreeRootItems;
-  }
-
-  @override
-  List<TreeItem> get _currentTreeRootItems => currentTreeRootItems;
-
-  @override
-  set _currentTreeRootItems(List<TreeItem> value) {
-    _$_currentTreeRootItemsAtom.reportWrite(value, super._currentTreeRootItems,
-        () {
-      super._currentTreeRootItems = value;
+  set _buildTreeState(BuildTreeState value) {
+    _$_buildTreeStateAtom.reportWrite(value, super._buildTreeState, () {
+      super._buildTreeState = value;
     });
   }
 
@@ -135,14 +117,11 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
   }
 
   @override
-  Map<String, TreeItem> _buildOriginalAssetsTree(
-      {List<CompanyLocationModel>? locationsList,
-      List<CompanyAssetModel>? assetsList}) {
+  void _buildOriginalAssetsTree() {
     final _$actionInfo = _$AssetsStoreBaseActionController.startAction(
         name: 'AssetsStoreBase._buildOriginalAssetsTree');
     try {
-      return super._buildOriginalAssetsTree(
-          locationsList: locationsList, assetsList: assetsList);
+      return super._buildOriginalAssetsTree();
     } finally {
       _$AssetsStoreBaseActionController.endAction(_$actionInfo);
     }

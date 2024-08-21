@@ -46,4 +46,16 @@ class TreeItem {
     this.children = const [],
     this.isExpanded = false,
   });
+
+  TreeItem clone() {
+    return TreeItem(
+      id: id,
+      parentId: parentId,
+      name: name,
+      type: type,
+      sensorType: sensorType,
+      children: children.map((child) => child.clone()).toList(),
+      isExpanded: isExpanded,
+    );
+  }
 }

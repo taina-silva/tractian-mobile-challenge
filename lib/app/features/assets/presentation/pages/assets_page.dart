@@ -66,20 +66,24 @@ class _AssetsPageState extends State<AssetsPage> {
           horizontal: DefaultSpace.normal,
         ),
         child: Observer(builder: (context) {
-          if (store.state is GetCompanyAssetsLoadingState) {
+          if (store.getCompanyAssetsState is GetCompanyAssetsLoadingState ||
+              store.buildTreeState is BuildTreeLoadingState) {
             return const Center(
                 child: CircularProgressIndicator(
               color: CColors.primaryColor,
             ));
           }
 
-          if (store.state is GetCompanyAssetsErrorState) {
+          if (store.getCompanyAssetsState is GetCompanyAssetsErrorState) {
             return Center(
-              child: Text((store.state as GetCompanyAssetsErrorState).message),
-            );
+                child: Text((store.getCompanyAssetsState as GetCompanyAssetsErrorState).message));
           }
 
-          if (store.state is GetCompanyAssetsSuccessState) {
+          if (store.buildTreeState is BuildTreeErrorState) {
+            return Center(child: Text((store.buildTreeState as BuildTreeErrorState).message));
+          }
+
+          if (store.buildTreeState is BuildTreeSuccessState) {
             return Column(
               children: [
                 CommonField(
@@ -97,9 +101,9 @@ class _AssetsPageState extends State<AssetsPage> {
                   child: ListView.separated(
                     padding: const EdgeInsets.only(top: DefaultSpace.normal),
                     shrinkWrap: true,
-                    itemCount: store.currentTreeRootItems.length,
-                    itemBuilder: (context, index) =>
-                        TreeItemComponent(item: store.currentTreeRootItems[index]),
+                    itemCount: (store.buildTreeState as BuildTreeSuccessState).treeRootItems.length,
+                    itemBuilder: (context, index) => TreeItemComponent(
+                        item: (store.buildTreeState as BuildTreeSuccessState).treeRootItems[index]),
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: DefaultSpace.normal),
                   ),
