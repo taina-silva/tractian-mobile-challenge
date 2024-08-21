@@ -135,12 +135,14 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
   }
 
   @override
-  List<TreeItem> _buildOriginalAssetsTree(
-      List<CompanyLocationModel> locations, List<CompanyAssetModel> assets) {
+  Map<String, TreeItem> _buildOriginalAssetsTree(
+      {List<CompanyLocationModel>? locationsList,
+      List<CompanyAssetModel>? assetsList}) {
     final _$actionInfo = _$AssetsStoreBaseActionController.startAction(
         name: 'AssetsStoreBase._buildOriginalAssetsTree');
     try {
-      return super._buildOriginalAssetsTree(locations, assets);
+      return super._buildOriginalAssetsTree(
+          locationsList: locationsList, assetsList: assetsList);
     } finally {
       _$AssetsStoreBaseActionController.endAction(_$actionInfo);
     }

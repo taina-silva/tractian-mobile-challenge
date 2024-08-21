@@ -36,7 +36,6 @@ class TreeItem {
   SensorType? sensorType;
   List<TreeItem> children;
   bool isExpanded;
-  bool isShown;
 
   TreeItem({
     required this.id,
@@ -46,6 +45,5 @@ class TreeItem {
     this.sensorType,
     this.children = const [],
     this.isExpanded = false,
-    this.isShown = true,
   });
 }

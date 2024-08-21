@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:mobx/mobx.dart';
 import 'package:tractian_mobile_challenge/app/core/infra/models/company_asset_model.dart';
 import 'package:tractian_mobile_challenge/app/core/infra/models/company_location_model.dart';
@@ -45,11 +46,9 @@ abstract class AssetsStoreBase with Store {
     final hasTextFilter = _textFilter != null && _textFilter!.isNotEmpty;
     final hasSensorTypeFilter = _sensorTypeFilter != null;
 
-    if (!hasTextFilter && !hasSensorTypeFilter) {
-      _currentTreeRootItems = (_state as GetCompanyAssetsSuccessState).treeRootItems;
-    } else {
-      _buildAssetsTreeWithFilter();
-    }
+    !hasTextFilter && !hasSensorTypeFilter
+        ? _buildOriginalAssetsTree()
+        : _buildAssetsTreeWithFilter();
   }
 
   @action
@@ -75,15 +74,20 @@ abstract class AssetsStoreBase with Store {
     );
 
     if (_state is! GetCompanyAssetsErrorState) {
-      _state = GetCompanyAssetsSuccessState(_buildOriginalAssetsTree(locations, assets));
+      _buildOriginalAssetsTree(locationsList: locations, assetsList: assets);
+      _state = GetCompanyAssetsSuccessState(locations, assets);
     }
   }
 
   @action
-  List<TreeItem> _buildOriginalAssetsTree(
-      List<CompanyLocationModel> locations, List<CompanyAssetModel> assets) {
-    final List<TreeItem> rootItems = [];
-    final Map<String, TreeItem> treeMap = {};
+  Map<String, TreeItem> _buildOriginalAssetsTree(
+      {List<CompanyLocationModel>? locationsList, List<CompanyAssetModel>? assetsList}) {
+    List<TreeItem> rootItems = [];
+    Map<String, TreeItem> treeMap = {};
+    List<CompanyLocationModel> locations =
+        List.from(locationsList ?? (_state as GetCompanyAssetsSuccessState).locations);
+    List<CompanyAssetModel> assets =
+        List.from(assetsList ?? (_state as GetCompanyAssetsSuccessState).assets);
 
     for (var location in locations) {
       final treeItem = TreeItem(
@@ -137,36 +141,48 @@ abstract class AssetsStoreBase with Store {
     _currentTreeRootItems = rootItems;
     _originalTreeMap = treeMap;
 
-    return rootItems;
+    return treeMap;
   }
 
   @action
   void _buildAssetsTreeWithFilter() {
     List<TreeItem> filteredItems = [];
+    List<TreeItem> filteredItemsParents = [];
     List<TreeItem> rootItems = [];
+    Map<String, TreeItem> treeMap = _buildOriginalAssetsTree();
 
-    for (var item in _originalTreeMap.values) {
+    for (var item in treeMap.values) {
       final matchesSensorType = _sensorTypeFilter == null || item.sensorType == _sensorTypeFilter;
       final matchesTextFilter = _textFilter == null ||
           _textFilter!.isEmpty ||
           item.name.toLowerCase().contains(_textFilter!.toLowerCase());
-      if (matchesSensorType && matchesTextFilter) filteredItems.add(item);
+      if (matchesSensorType && matchesTextFilter) {
+        filteredItems.add(item);
+        TreeItem? parent = treeMap[item.parentId];
+        if (parent != null) filteredItemsParents.add(parent);
+      }
     }
 
-    TreeItem getRootItem(TreeItem currentItem, List<TreeItem> path) {
-      if (currentItem.parentId == null) return currentItem;
-      final parent = _originalTreeMap[currentItem.parentId];
-      if (parent != null) {
-        parent.children = List.from(parent.children)
-          ..removeWhere((TreeItem item) => !filteredItems.contains(item) && !path.contains(item));
-        return getRootItem(parent, [...path, parent]);
+    TreeItem getRootItem(TreeItem currentItem) {
+      TreeItem? parent = treeMap[currentItem.parentId];
+      if (parent == null) return currentItem;
+
+      List<TreeItem> newChildren = [];
+
+      for (var child in parent.children) {
+        final c1 = filteredItems.firstWhereOrNull((i) => i.id == child.id);
+        final c2 = filteredItemsParents.firstWhereOrNull((i) => i.id == child.id);
+        if (c1 != null || c2 != null) newChildren.add(child);
       }
-      return currentItem;
+
+      parent.children = newChildren;
+      filteredItemsParents.add(parent);
+      return getRootItem(parent);
     }
 
     for (var item in filteredItems) {
-      TreeItem rootItem = getRootItem(item, [item]);
-      if (!rootItems.contains(rootItem)) rootItems.add(rootItem);
+      TreeItem rootItem = getRootItem(item);
+      if (rootItems.firstWhereOrNull((i) => i.id == rootItem.id) == null) rootItems.add(rootItem);
     }
 
     _currentTreeRootItems = rootItems;

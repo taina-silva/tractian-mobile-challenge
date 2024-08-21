@@ -12,10 +12,12 @@ It is possible to check a video demonstrating the app opening for each company a
 
 After successfully completing the challenge and implementing the desired features, it's evident that there are several areas where the application can be further enhanced to improve usability and optimization.
 
-Firstly, I would focus on refining the design of the constructed tree. Currently, the arrangement of locations, assets, and components isn't as clearly hierarchical as a tree structure should be. While I used ExpansionTile to develop the tree nodes and expand their children where applicable in an understandable way, I believe the visual representation could be noticeably better.
+First and foremost, I would focus on developing a more optimized and efficient logic for constructing the tree, currently located in the assets_store.dart file, especially as the data volume increases. Additionally, I would aim to implement more efficient and optimized search methods, particularly when applying text and energy (selection) filters.
+
+Immediately, another improvement I noticed would be the implementation of a caching mechanism for the location and asset data retrieved each time a specific company is accessed. This would prevent repeated and unnecessary API calls, significantly enhancing the application's performance.
+
+I also would focus on refining the design of the constructed tree. Currently, the arrangement of locations, assets, and components isn't as clearly hierarchical as a tree structure should be. While I used ExpansionTile to develop the tree nodes and expand their children where applicable in an understandable way, I believe the visual representation could be noticeably better.
 
 Another point for improvement is the separation of dependency setups managed by GetIt. In the current implementation, all dependency injections are configured in the outermost layer of the application. However, some dependencies are only used in more specific, internal layers and features. According to clean architecture principles, these should not be accessible to other features.
 
 Additionally, the RestClient class, which abstracts external service calls using the Dio package for HTTP requests related to the mock API, could be further developed. The class could be enhanced to better handle errors and exceptions, verify authentication (if such logic is required in the future), and generally encapsulate the behavior of a service that retrieves external data.
-
-Moreover, I might need to devise a more optimized and efficient logic for constructing the tree, which is currently in the assets_store.dart file, especially as the volume of data increases.
