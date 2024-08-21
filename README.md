@@ -19,9 +19,3 @@ Another point for improvement is the separation of dependency setups managed by 
 Additionally, the RestClient class, which abstracts external service calls using the Dio package for HTTP requests related to the mock API, could be further developed. The class could be enhanced to better handle errors and exceptions, verify authentication (if such logic is required in the future), and generally encapsulate the behavior of a service that retrieves external data.
 
 Moreover, I might need to devise a more optimized and efficient logic for constructing the tree, which is currently in the assets_store.dart file, especially as the volume of data increases.
-
-# NOTE
-
-When searching for locations, assets, or components using a filter, whether by text or sensor type, the search considers the tree structure of the item that matches the filter. From the matching item, the search traverses the tree upwards to locate its 'parents' and displays the tree for those filtered items. For example, if an item has children with the sensor type 'energy' and others with the sensor type 'vibration,' filtering the view by 'energy' will correctly find the matching child. However, when searching for the parent, it displays the entire parent node, including children with the sensor type 'vibration.'
-
-I reflected on this after the implementation and realized I wasn't entirely sure what the expected behavior should be in this situation. However, correcting this would not be difficult, as it could be resolved by simply removing sibling nodes of a different type from the filtered view, ensuring that the view is fully filtered according to the specified criteria.

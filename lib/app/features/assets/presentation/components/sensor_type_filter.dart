@@ -20,7 +20,6 @@ class _SensorTypeFilterState extends State<SensorTypeFilter> {
   @override
   void initState() {
     super.initState();
-
     store = providers.getIt<AssetsStore>();
   }
 

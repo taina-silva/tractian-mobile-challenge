@@ -150,21 +150,22 @@ abstract class AssetsStoreBase with Store {
       final matchesTextFilter = _textFilter == null ||
           _textFilter!.isEmpty ||
           item.name.toLowerCase().contains(_textFilter!.toLowerCase());
-
-      if (matchesSensorType && matchesTextFilter) {
-        filteredItems.add(item);
-      }
+      if (matchesSensorType && matchesTextFilter) filteredItems.add(item);
     }
 
-    TreeItem getRootItem(TreeItem filteredItem) {
-      if (filteredItem.parentId == null) return filteredItem;
-      final parent = _originalTreeMap[filteredItem.parentId];
-      if (parent != null) return getRootItem(parent);
-      return filteredItem;
+    TreeItem getRootItem(TreeItem currentItem, List<TreeItem> path) {
+      if (currentItem.parentId == null) return currentItem;
+      final parent = _originalTreeMap[currentItem.parentId];
+      if (parent != null) {
+        parent.children = List.from(parent.children)
+          ..removeWhere((TreeItem item) => !filteredItems.contains(item) && !path.contains(item));
+        return getRootItem(parent, [...path, parent]);
+      }
+      return currentItem;
     }
 
     for (var item in filteredItems) {
-      TreeItem rootItem = getRootItem(item);
+      TreeItem rootItem = getRootItem(item, [item]);
       if (!rootItems.contains(rootItem)) rootItems.add(rootItem);
     }
 
