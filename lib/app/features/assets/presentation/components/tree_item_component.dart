@@ -12,6 +12,13 @@ class TreeItemComponent extends StatefulWidget {
 }
 
 class _TreeItemComponentState extends State<TreeItemComponent> {
+  void closeChildren(TreeItem item) {
+    item.isExpanded = false;
+    for (var i in item.children) {
+      closeChildren(i);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
@@ -27,7 +34,12 @@ class _TreeItemComponentState extends State<TreeItemComponent> {
         ],
       ),
       backgroundColor: CColors.primaryBackground,
-      onExpansionChanged: (bool expanding) => setState(() => widget.item.isExpanded = expanding),
+      onExpansionChanged: (bool expanding) {
+        setState(() {
+          widget.item.isExpanded = expanding;
+          if (!expanding) closeChildren(widget.item);
+        });
+      },
       trailing: widget.item.children.isNotEmpty
           ? Icon(
               widget.item.isExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
@@ -35,9 +47,11 @@ class _TreeItemComponentState extends State<TreeItemComponent> {
             )
           : const SizedBox(),
       tilePadding: const EdgeInsets.all(0),
-      children: widget.item.children.map((child) {
-        return TreeItemComponent(item: child);
-      }).toList(),
+      children: widget.item.isExpanded
+          ? widget.item.children.map((child) {
+              return TreeItemComponent(item: child);
+            }).toList()
+          : [],
     );
   }
 }
