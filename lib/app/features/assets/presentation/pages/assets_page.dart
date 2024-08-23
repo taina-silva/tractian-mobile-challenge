@@ -88,6 +88,7 @@ class _AssetsPageState extends State<AssetsPage> {
                   children: [
                     SizedBox(
                       width: (MediaQuery.of(context).size.width - 2 * DefaultSpace.normal) * 0.79,
+                      height: 48,
                       child: CommonField(
                         placeholder: 'Buscar Ativo ou Local',
                         controller: _textController,

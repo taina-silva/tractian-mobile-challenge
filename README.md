@@ -8,7 +8,7 @@ To populate the tree structure with data, a fake API was used, available [here](
 
 Additionally, the design of the app was based on the ([Figma](https://www.figma.com/design/IP50SSLkagXsUNWiZj0PjP/%5BCareers%5D-Flutter-Challenge-v2?node-id=0-1&t=ZxowLpXDFvQxdNks-0)) provided in the challenge's README.
 
-It is possible to check a video demonstrating the app opening for each company and selecting a filter [here](https://drive.google.com/file/d/1gj1T5fqDS7pu1vlqz2WX-1dSQzn9TX0O/view?usp=sharing).
+It is possible to check a video demonstrating the app opening for each company and selecting a filter [here](https://drive.google.com/file/d/1h5FInsqsG8Z-bMviLQVCTWpHoeaxRzmn/view?usp=sharing).
 
 After successfully completing the challenge and implementing the desired features, it's evident that there are several areas where the application can be further enhanced to improve usability and optimization.
 
