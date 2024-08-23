@@ -26,13 +26,13 @@ class _SensorTypeFilterState extends State<SensorTypeFilter> {
   @override
   Widget build(BuildContext context) {
     ButtonParameters energyButtonParameters = ButtonParameters(
-      text: 'Sensor de Energia',
+      text: const Left('Sensor de Energia'),
       prefixIcon: Right(Image.asset(SensorType.energy.icon)),
       onTap: () => store.setSensorTypeFilter(SensorType.energy),
     );
 
     ButtonParameters vibrationButtonParameters = ButtonParameters(
-      text: 'Crítico',
+      text: const Left('Crítico'),
       prefixIcon: Right(Image.asset(SensorType.vibration.icon)),
       onTap: () => store.setSensorTypeFilter(SensorType.vibration),
     );

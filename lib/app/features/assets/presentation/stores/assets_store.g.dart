@@ -91,6 +91,25 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
         .run(() => super.getCompanyAssets(companyId));
   }
 
+  late final _$_buildOriginalAssetsTreeAsyncAction =
+      AsyncAction('AssetsStoreBase._buildOriginalAssetsTree', context: context);
+
+  @override
+  Future<void> _buildOriginalAssetsTree() {
+    return _$_buildOriginalAssetsTreeAsyncAction
+        .run(() => super._buildOriginalAssetsTree());
+  }
+
+  late final _$_buildAssetsTreeWithFilterAsyncAction = AsyncAction(
+      'AssetsStoreBase._buildAssetsTreeWithFilter',
+      context: context);
+
+  @override
+  Future<void> _buildAssetsTreeWithFilter() {
+    return _$_buildAssetsTreeWithFilterAsyncAction
+        .run(() => super._buildAssetsTreeWithFilter());
+  }
+
   late final _$AssetsStoreBaseActionController =
       ActionController(name: 'AssetsStoreBase', context: context);
 
@@ -111,28 +130,6 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
         name: 'AssetsStoreBase.setTextFilter');
     try {
       return super.setTextFilter(text);
-    } finally {
-      _$AssetsStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void _buildOriginalAssetsTree() {
-    final _$actionInfo = _$AssetsStoreBaseActionController.startAction(
-        name: 'AssetsStoreBase._buildOriginalAssetsTree');
-    try {
-      return super._buildOriginalAssetsTree();
-    } finally {
-      _$AssetsStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void _buildAssetsTreeWithFilter() {
-    final _$actionInfo = _$AssetsStoreBaseActionController.startAction(
-        name: 'AssetsStoreBase._buildAssetsTreeWithFilter');
-    try {
-      return super._buildAssetsTreeWithFilter();
     } finally {
       _$AssetsStoreBaseActionController.endAction(_$actionInfo);
     }

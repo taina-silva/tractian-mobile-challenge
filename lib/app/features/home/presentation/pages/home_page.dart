@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                   ButtonParameters(
                     width: double.infinity,
                     height: 76,
-                    text: '${company.name} Unit',
+                    text: Left('${company.name} Unit'),
                     prefixIcon: Right(Image.asset('${Assets.icons}/icon.png')),
                     onTap: () {
                       Navigator.push(

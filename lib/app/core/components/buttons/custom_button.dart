@@ -82,14 +82,17 @@ class CustomButton extends StatelessWidget {
         const SizedBox(width: 8),
       ],
       Center(
-        child: Text(
-          params.text,
-          style: TextStyle(
-            fontSize: params.fSize,
-            fontWeight: params.fWeight,
-            color: _contentColor,
+        child: params.text.fold(
+          (text) => Text(
+            text,
+            style: TextStyle(
+              fontSize: params.fSize,
+              fontWeight: params.fWeight,
+              color: _contentColor,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
+          (widget) => widget,
         ),
       ),
       if (params.suffixIcon != null) ...[
@@ -167,7 +170,7 @@ enum ButtonType { primary, secondary }
 enum ButtonContentAlignment { left, center, right }
 
 class ButtonParameters extends Equatable {
-  final String text;
+  final Either<String, Widget> text;
   final double fSize;
   final FontWeight fWeight;
   final VoidCallback? onTap;
@@ -198,7 +201,7 @@ class ButtonParameters extends Equatable {
   });
 
   ButtonParameters copyWith({
-    String? text,
+    Either<String, Widget>? text,
     double? fSize,
     FontWeight? fWeight,
     bool? isLoading,

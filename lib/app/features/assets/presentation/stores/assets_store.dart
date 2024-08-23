@@ -15,11 +15,11 @@ abstract class AssetsStoreBase with Store {
 
   AssetsStoreBase(this._repository) {
     reactions = [
-      reaction((_) => _getCompanyAssetsState, (GetCompanyAssetsState state) {
-        if (state is GetCompanyAssetsSuccessState) _buildOriginalAssetsTree();
+      reaction((_) => _getCompanyAssetsState, (GetCompanyAssetsState state) async {
+        if (state is GetCompanyAssetsSuccessState) await _buildOriginalAssetsTree();
       }),
-      reaction((_) => _textFilter, (String? text) => _applyFilters()),
-      reaction((_) => _sensorTypeFilter, (SensorType? sensorType) => _applyFilters()),
+      reaction((_) => _textFilter, (String? text) async => await _applyFilters()),
+      reaction((_) => _sensorTypeFilter, (SensorType? sensorType) async => await _applyFilters()),
     ];
   }
 
@@ -45,12 +45,12 @@ abstract class AssetsStoreBase with Store {
     _textFilter = (text == null || text.isEmpty) ? null : text;
   }
 
-  void _applyFilters() {
-    _buildOriginalAssetsTree();
+  Future<void> _applyFilters() async {
+    await _buildOriginalAssetsTree();
 
     final hasTextFilter = _textFilter != null && _textFilter!.isNotEmpty;
     final hasSensorTypeFilter = _sensorTypeFilter != null;
-    if (hasTextFilter || hasSensorTypeFilter) _buildAssetsTreeWithFilter();
+    if (hasTextFilter || hasSensorTypeFilter) await _buildAssetsTreeWithFilter();
   }
 
   @action
@@ -81,7 +81,7 @@ abstract class AssetsStoreBase with Store {
   }
 
   @action
-  void _buildOriginalAssetsTree() {
+  Future<void> _buildOriginalAssetsTree() async {
     List<CompanyLocationModel> locations =
         List.from((_getCompanyAssetsState as GetCompanyAssetsSuccessState).locations);
     List<CompanyAssetModel> assets =
@@ -146,7 +146,7 @@ abstract class AssetsStoreBase with Store {
   }
 
   @action
-  void _buildAssetsTreeWithFilter() {
+  Future<void> _buildAssetsTreeWithFilter() async {
     Map<String, TreeItem> treeMap = (_buildTreeState as BuildTreeSuccessState).treeMap;
     _buildTreeState = BuildTreeLoadingState();
 

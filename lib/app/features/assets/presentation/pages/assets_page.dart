@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:fpdart/fpdart.dart' hide State;
+import 'package:tractian_mobile_challenge/app/core/components/buttons/custom_button.dart';
 import 'package:tractian_mobile_challenge/app/core/components/fields/common_field.dart';
 import 'package:tractian_mobile_challenge/app/core/components/structure/custom_app_bar.dart';
 import 'package:tractian_mobile_challenge/app/core/components/structure/custom_scaffold.dart';
@@ -33,10 +34,6 @@ class _AssetsPageState extends State<AssetsPage> {
 
     store = providers.getIt<AssetsStore>();
     store.getCompanyAssets(widget.companyId);
-
-    _textController.addListener(() {
-      store.setTextFilter(_textController.text);
-    });
   }
 
   @override
@@ -86,14 +83,30 @@ class _AssetsPageState extends State<AssetsPage> {
           if (store.buildTreeState is BuildTreeSuccessState) {
             return Column(
               children: [
-                CommonField(
-                  placeholder: 'Buscar Ativo ou Local',
-                  controller: _textController,
-                  prefixIcon: const Icon(Icons.search, color: CColors.primaryColor),
-                  suffixIcon: GestureDetector(
-                    onTap: () => _textController.clear(),
-                    child: const Icon(Icons.close, color: CColors.primaryColor),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: (MediaQuery.of(context).size.width - 2 * DefaultSpace.normal) * 0.79,
+                      child: CommonField(
+                        placeholder: 'Buscar Ativo ou Local',
+                        controller: _textController,
+                        suffixIcon: GestureDetector(
+                          onTap: () => store.setTextFilter(null),
+                          child: const Icon(Icons.close, color: CColors.primaryColor),
+                        ),
+                      ),
+                    ),
+                    CustomButton.primarySmall(
+                      ButtonParameters(
+                        text: const Right(Icon(Icons.search, color: CColors.neutral0)),
+                        width: (MediaQuery.of(context).size.width - 2 * DefaultSpace.normal) * 0.2,
+                        height: 48,
+                        onTap: () => store.setTextFilter(_textController.text),
+                        isDisabled: store.buildTreeState is BuildTreeLoadingState,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: DefaultSpace.normal),
                 const SensorTypeFilter(),
