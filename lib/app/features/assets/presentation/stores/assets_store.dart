@@ -161,10 +161,16 @@ abstract class AssetsStoreBase with Store {
           hasTextFilter && item.name.toLowerCase().contains(_textFilter!.toLowerCase());
       bool matchesSensorTypeFilter = hasSensorTypeFilter && item.sensorType == _sensorTypeFilter;
 
-      if (matchesTextFilter || matchesSensorTypeFilter) {
+      void addItem(TreeItem item) {
         filteredItems.add(item);
         TreeItem? parent = treeMap[item.parentId];
         if (parent != null) filteredItemsParents.add(parent);
+      }
+
+      if (hasSensorTypeFilter && hasTextFilter) {
+        if (matchesSensorTypeFilter) addItem(item);
+      } else {
+        if (matchesTextFilter || matchesSensorTypeFilter) addItem(item);
       }
     }
 

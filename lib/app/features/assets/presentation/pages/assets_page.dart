@@ -92,7 +92,10 @@ class _AssetsPageState extends State<AssetsPage> {
                         placeholder: 'Buscar Ativo ou Local',
                         controller: _textController,
                         suffixIcon: GestureDetector(
-                          onTap: () => store.setTextFilter(null),
+                          onTap: () {
+                            _textController.clear();
+                            store.setTextFilter(null);
+                          },
                           child: const Icon(Icons.close, color: CColors.primaryColor),
                         ),
                       ),
