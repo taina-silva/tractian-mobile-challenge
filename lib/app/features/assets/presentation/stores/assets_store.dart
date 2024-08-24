@@ -188,37 +188,12 @@ abstract class AssetsStoreBase with Store {
     List<TreeItem> finalRootItems = [];
 
     for (var rootItem in rootItems) {
-      if (_hasDescendantWithName(rootItem, targetText)) {
+      if (TreeItem.hasDescendantWithName(rootItem, targetText)) {
         finalRootItems.add(rootItem);
       }
     }
 
     return finalRootItems;
-  }
-
-  bool _hasDescendantWithName(TreeItem item, String targetText) {
-    if (item.name.toLowerCase().contains(targetText.toLowerCase())) return true;
-
-    for (var child in item.children) {
-      if (_hasDescendantWithName(child, targetText)) return true;
-    }
-
-    return false;
-  }
-
-  TreeItem _getRootItem(TreeItem currentItem, List<TreeItem> filteredItems,
-      List<TreeItem> filteredItemsParents, Map<String, TreeItem> treeMap) {
-    TreeItem? parent = treeMap[currentItem.parentId];
-    if (parent == null) return currentItem;
-
-    parent.children = parent.children.where((child) {
-      return filteredItems.any((i) => i.id == child.id) ||
-          filteredItemsParents.any((i) => i.id == child.id);
-    }).toList();
-
-    filteredItemsParents.add(parent);
-
-    return _getRootItem(parent, filteredItems, filteredItemsParents, treeMap);
   }
 
   List<TreeItem> _buildTreeRootItems(
@@ -229,7 +204,14 @@ abstract class AssetsStoreBase with Store {
     final uniqueRootItems = <String, TreeItem>{};
 
     for (var item in filteredItems) {
-      TreeItem rootItem = _getRootItem(item, filteredItems, filteredItemsParents, treeMap);
+      TreeItem rootItem = TreeItem.getRootItemWithMatching(
+        item,
+        treeMap,
+        (item) =>
+            filteredItems.any((i) => i.id == item.id) ||
+            filteredItemsParents.any((i) => i.id == item.id),
+        (item) => filteredItemsParents.add(item),
+      );
       uniqueRootItems.putIfAbsent(rootItem.id, () => rootItem);
     }
 

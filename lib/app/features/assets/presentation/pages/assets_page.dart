@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 import 'package:tractian_mobile_challenge/app/core/components/buttons/custom_button.dart';
@@ -42,6 +43,10 @@ class _AssetsPageState extends State<AssetsPage> {
     store.setTextFilter(null);
 
     super.dispose();
+  }
+
+  void hideKeyboard() {
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
   @override
@@ -96,6 +101,7 @@ class _AssetsPageState extends State<AssetsPage> {
                           onTap: () {
                             _textController.clear();
                             store.setTextFilter(null);
+                            hideKeyboard();
                           },
                           child: const Icon(Icons.close, color: CColors.primaryColor),
                         ),
@@ -106,7 +112,10 @@ class _AssetsPageState extends State<AssetsPage> {
                         text: const Right(Icon(Icons.search, color: CColors.neutral0)),
                         width: (MediaQuery.of(context).size.width - 2 * DefaultSpace.normal) * 0.2,
                         height: 48,
-                        onTap: () => store.setTextFilter(_textController.text),
+                        onTap: () {
+                          store.setTextFilter(_textController.text);
+                          hideKeyboard();
+                        },
                         isDisabled: store.buildTreeState is BuildTreeLoadingState,
                       ),
                     ),

@@ -46,4 +46,32 @@ class TreeItem {
     this.children = const [],
     this.isExpanded = false,
   });
+
+  static TreeItem getRootItemWithMatching(
+    TreeItem item,
+    Map<String, TreeItem> itemTreeMap,
+    bool Function(TreeItem) matchingFunction,
+    void Function(TreeItem) afterMatchingFunction,
+  ) {
+    TreeItem? parent = itemTreeMap[item.parentId];
+    if (parent == null) return item;
+
+    parent.children = parent.children.where((child) {
+      return matchingFunction(child);
+    }).toList();
+
+    afterMatchingFunction(parent);
+
+    return getRootItemWithMatching(parent, itemTreeMap, matchingFunction, afterMatchingFunction);
+  }
+
+  static bool hasDescendantWithName(TreeItem item, String name) {
+    if (item.name.toLowerCase().contains(name.toLowerCase())) return true;
+
+    for (var child in item.children) {
+      if (hasDescendantWithName(child, name)) return true;
+    }
+
+    return false;
+  }
 }
