@@ -48,9 +48,9 @@ class _TreeItemComponentState extends State<TreeItemComponent> {
           : const SizedBox(),
       tilePadding: const EdgeInsets.all(0),
       children: widget.item.isExpanded
-          ? widget.item.children.map((child) {
-              return TreeItemComponent(item: child);
-            }).toList()
+          ? widget.item.children
+              .map((child) => child.isShown ? TreeItemComponent(item: child) : const SizedBox())
+              .toList()
           : [],
     );
   }

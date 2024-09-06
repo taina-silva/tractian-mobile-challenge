@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     store = providers.getIt<HomeStore>();
-    store.getCompanies();
+    store.fetchCompanies();
   }
 
   @override
@@ -45,21 +45,23 @@ class _HomePageState extends State<HomePage> {
         height: MediaQuery.of(context).size.height,
         margin: const EdgeInsets.symmetric(horizontal: DefaultSpace.large),
         child: Observer(builder: (context) {
-          if (store.state is GetCompaniesLoadingState) {
+          final state = store.fetchCompaniesState;
+
+          if (state is FetchCompaniesLoadingState) {
             return const Center(
                 child: CircularProgressIndicator(
               color: CColors.primaryColor,
             ));
           }
 
-          if (store.state is GetCompaniesErrorState) {
+          if (state is FetchCompaniesErrorState) {
             return Center(
-              child: Text((store.state as GetCompaniesErrorState).message),
+              child: Text(state.message),
             );
           }
 
-          if (store.state is GetCompaniesSuccessState) {
-            final companies = (store.state as GetCompaniesSuccessState).companies;
+          if (state is FetchCompaniesSuccessState) {
+            final companies = store.companies;
 
             if (companies.isEmpty) {
               return const Center(child: Text('Nenhuma empresa encontrada.'));

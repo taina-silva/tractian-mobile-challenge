@@ -1,21 +1,33 @@
 import 'package:equatable/equatable.dart';
-import 'package:tractian_mobile_challenge/app/core/infra/models/company_model.dart';
 
-sealed class GetCompaniesState extends Equatable {
+sealed class FetchCompaniesState extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-final class GetCompaniesInitialState extends GetCompaniesState {}
+final class FetchCompaniesInitialState extends FetchCompaniesState {}
 
-final class GetCompaniesLoadingState extends GetCompaniesState {}
+final class FetchCompaniesLoadingState extends FetchCompaniesState {}
 
-final class GetCompaniesSuccessState extends GetCompaniesState {
-  final List<CompanyModel> companies;
-  GetCompaniesSuccessState(this.companies);
+final class FetchCompaniesSuccessState extends FetchCompaniesState {}
+
+final class FetchCompaniesErrorState extends FetchCompaniesState {
+  final String message;
+  FetchCompaniesErrorState(this.message);
 }
 
-final class GetCompaniesErrorState extends GetCompaniesState {
+sealed class FetchCompanyPropertiesState extends Equatable {
+  @override
+  List<Object> get props => [];
+}
+
+final class FetchCompanyPropertiesInitialState extends FetchCompanyPropertiesState {}
+
+final class FetchCompanyPropertiesLoadingState extends FetchCompanyPropertiesState {}
+
+final class FetchCompanyPropertiesSuccessState extends FetchCompanyPropertiesState {}
+
+final class FetchCompanyPropertiesErrorState extends FetchCompanyPropertiesState {
   final String message;
-  GetCompaniesErrorState(this.message);
+  FetchCompanyPropertiesErrorState(this.message);
 }

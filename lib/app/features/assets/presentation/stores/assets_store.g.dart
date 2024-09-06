@@ -9,58 +9,72 @@ part of 'assets_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AssetsStore on AssetsStoreBase, Store {
-  late final _$_getCompanyAssetsStateAtom =
-      Atom(name: 'AssetsStoreBase._getCompanyAssetsState', context: context);
+  late final _$_companyIdAtom =
+      Atom(name: 'AssetsStoreBase._companyId', context: context);
 
-  GetCompanyAssetsState get getCompanyAssetsState {
-    _$_getCompanyAssetsStateAtom.reportRead();
-    return super._getCompanyAssetsState;
+  String? get companyId {
+    _$_companyIdAtom.reportRead();
+    return super._companyId;
   }
 
   @override
-  GetCompanyAssetsState get _getCompanyAssetsState => getCompanyAssetsState;
+  String? get _companyId => companyId;
 
   @override
-  set _getCompanyAssetsState(GetCompanyAssetsState value) {
-    _$_getCompanyAssetsStateAtom
-        .reportWrite(value, super._getCompanyAssetsState, () {
-      super._getCompanyAssetsState = value;
+  set _companyId(String? value) {
+    _$_companyIdAtom.reportWrite(value, super._companyId, () {
+      super._companyId = value;
     });
   }
 
-  late final _$_buildTreeStateAtom =
-      Atom(name: 'AssetsStoreBase._buildTreeState', context: context);
+  late final _$originalTreeRootItemsAtom =
+      Atom(name: 'AssetsStoreBase.originalTreeRootItems', context: context);
 
-  BuildTreeState get buildTreeState {
-    _$_buildTreeStateAtom.reportRead();
-    return super._buildTreeState;
+  @override
+  List<TreeItem> get originalTreeRootItems {
+    _$originalTreeRootItemsAtom.reportRead();
+    return super.originalTreeRootItems;
   }
 
   @override
-  BuildTreeState get _buildTreeState => buildTreeState;
-
-  @override
-  set _buildTreeState(BuildTreeState value) {
-    _$_buildTreeStateAtom.reportWrite(value, super._buildTreeState, () {
-      super._buildTreeState = value;
+  set originalTreeRootItems(List<TreeItem> value) {
+    _$originalTreeRootItemsAtom.reportWrite(value, super.originalTreeRootItems,
+        () {
+      super.originalTreeRootItems = value;
     });
   }
 
-  late final _$_sensorTypeFilterAtom =
-      Atom(name: 'AssetsStoreBase._sensorTypeFilter', context: context);
+  late final _$treeRootItemsAtom =
+      Atom(name: 'AssetsStoreBase.treeRootItems', context: context);
 
-  SensorType? get sensorTypeFilter {
-    _$_sensorTypeFilterAtom.reportRead();
-    return super._sensorTypeFilter;
+  @override
+  List<TreeItem> get treeRootItems {
+    _$treeRootItemsAtom.reportRead();
+    return super.treeRootItems;
   }
 
   @override
-  SensorType? get _sensorTypeFilter => sensorTypeFilter;
+  set treeRootItems(List<TreeItem> value) {
+    _$treeRootItemsAtom.reportWrite(value, super.treeRootItems, () {
+      super.treeRootItems = value;
+    });
+  }
+
+  late final _$_sensorFilterAtom =
+      Atom(name: 'AssetsStoreBase._sensorFilter', context: context);
+
+  SensorType? get sensorFilter {
+    _$_sensorFilterAtom.reportRead();
+    return super._sensorFilter;
+  }
 
   @override
-  set _sensorTypeFilter(SensorType? value) {
-    _$_sensorTypeFilterAtom.reportWrite(value, super._sensorTypeFilter, () {
-      super._sensorTypeFilter = value;
+  SensorType? get _sensorFilter => sensorFilter;
+
+  @override
+  set _sensorFilter(SensorType? value) {
+    _$_sensorFilterAtom.reportWrite(value, super._sensorFilter, () {
+      super._sensorFilter = value;
     });
   }
 
@@ -80,34 +94,6 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
     _$_textFilterAtom.reportWrite(value, super._textFilter, () {
       super._textFilter = value;
     });
-  }
-
-  late final _$getCompanyAssetsAsyncAction =
-      AsyncAction('AssetsStoreBase.getCompanyAssets', context: context);
-
-  @override
-  Future<void> getCompanyAssets(String companyId) {
-    return _$getCompanyAssetsAsyncAction
-        .run(() => super.getCompanyAssets(companyId));
-  }
-
-  late final _$_buildOriginalAssetsTreeAsyncAction =
-      AsyncAction('AssetsStoreBase._buildOriginalAssetsTree', context: context);
-
-  @override
-  Future<void> _buildOriginalAssetsTree() {
-    return _$_buildOriginalAssetsTreeAsyncAction
-        .run(() => super._buildOriginalAssetsTree());
-  }
-
-  late final _$_buildAssetsTreeWithFilterAsyncAction = AsyncAction(
-      'AssetsStoreBase._buildAssetsTreeWithFilter',
-      context: context);
-
-  @override
-  Future<void> _buildAssetsTreeWithFilter() {
-    return _$_buildAssetsTreeWithFilterAsyncAction
-        .run(() => super._buildAssetsTreeWithFilter());
   }
 
   late final _$AssetsStoreBaseActionController =
@@ -136,9 +122,21 @@ mixin _$AssetsStore on AssetsStoreBase, Store {
   }
 
   @override
+  bool setCompanyId(String companyId) {
+    final _$actionInfo = _$AssetsStoreBaseActionController.startAction(
+        name: 'AssetsStoreBase.setCompanyId');
+    try {
+      return super.setCompanyId(companyId);
+    } finally {
+      _$AssetsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-
+originalTreeRootItems: ${originalTreeRootItems},
+treeRootItems: ${treeRootItems}
     ''';
   }
 }

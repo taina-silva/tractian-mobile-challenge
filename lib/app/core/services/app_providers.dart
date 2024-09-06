@@ -28,6 +28,6 @@ class AppProviders extends ProvidersSetup {
     getIt.registerLazySingleton<HomeStore>(() => HomeStore(getIt.get<ICompaniesRepository>()));
 
     // assets
-    getIt.registerLazySingleton<AssetsStore>(() => AssetsStore(getIt.get<ICompaniesRepository>()));
+    getIt.registerLazySingleton<AssetsStore>(() => AssetsStore());
   }
 }
