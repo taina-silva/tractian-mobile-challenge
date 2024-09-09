@@ -57,7 +57,7 @@ class _TreeItemComponentState extends State<TreeItemComponent> {
           ),
           if (widget.item.isExpanded)
             CustomScrollView(
-              shrinkWrap: true,
+              shrinkWrap: true, // please, check README.md
               primary: true,
               physics: const NeverScrollableScrollPhysics(),
               slivers: [
